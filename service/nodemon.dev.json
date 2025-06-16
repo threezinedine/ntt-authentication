@@ -1,0 +1,7 @@
+{
+	"verbose": true,
+	"watch": ["src/**/*"],
+	"ext": "ts",
+	"exec": "npm run dev",
+	"ignore": ["dist", "node_modules", "*.test.ts"]
+}

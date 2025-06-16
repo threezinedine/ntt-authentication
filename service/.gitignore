@@ -1,0 +1,33 @@
+# Compiled output
+dist/
+build/
+lib/
+
+# Node modules
+node_modules/
+
+# Package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE-specific files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# TypeScript declaration files
+*.d.ts
+
+# Temporary files
+*.log
+*.tmp
