@@ -4,7 +4,7 @@
 		"compile": "tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
 		"start": "npm run compile && ts-node dist/main.js",
 		"dev": "nodemon --config nodemon.dev.json",
-		"test": "jest --config jest.config.ts",
+		"test": "jest --config jest.config.ts --runInBand --detectOpenHandles --forceExit",
 		"test:watch": "nodemon --config nodemon.test.json"
 	},
 	"dependencies": {
