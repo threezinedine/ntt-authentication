@@ -39,11 +39,11 @@ jobs:
 
             - name: Connect to the VPS
               run: |
-                  ssh ${{env.VPS_ACCOUNT}}@${{env.VPS_IP}} && \
+                  ssh ${{secrets.VPS_ACCOUNT}}@${{secrets.VPS_IP}} && \
                     rm -r ntt-authentication && \
                     git clone https://github.com/threezinedine/ntt-authentication.git && \
                     cd ntt-authentication/service && \
                     rm .env && \
-                    echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{env.MYSQL_HOST}}\nMYSQL_PORT=${{env.MYSQL_PORT}}\nMYSQL_USER=${{env.MYSQL_USER}}\nMYSQL_PASSWORD=${{env.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{env.MYSQL_DATABASE}}\nMODE=production" > .env && \
+                    echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{secrets.MYSQL_HOST}}\nMYSQL_PORT=${{secrets.MYSQL_PORT}}\nMYSQL_USER=${{secrets.MYSQL_USER}}\nMYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{secrets.MYSQL_DATABASE}}\nMODE=production" > .env && \
                     cat .env && \
                     docker compose up -d
