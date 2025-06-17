@@ -1,0 +1,23 @@
+name: Authentication CI CD
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build-test:
+        name: Build and Testing the project
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checking out the code
+              uses: actions/checkout@v4
+
+            - name: Setup NodeJS v23.7.0
+              uses: actions/setup-node@v4
+
+            - name: Install dependencies
+              run: cd service && npm install
+
+            - name: Run tests
+              run: cd service && npm run test
