@@ -24,13 +24,13 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y mysql-server
 
-            - name: Start MySQL
-              run: |
-                  sudo service mysql start
-
             - name: Change the root password
               run: |
                   sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1233456';"
+
+            - name: Start MySQL
+              run: |
+                  sudo service mysql start
 
             - name: Create database
               run: |
