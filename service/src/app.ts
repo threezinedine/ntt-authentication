@@ -90,7 +90,6 @@ class App {
 
 	async teardown() {
 		await this.serviceContainer.database.disconnect();
-		process.exit(0);
 	}
 }
 
