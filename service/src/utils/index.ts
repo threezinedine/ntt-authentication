@@ -1,3 +1,1 @@
-import { add } from './test_utils';
-
-export { add };
+export * from './url';
