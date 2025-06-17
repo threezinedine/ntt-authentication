@@ -16,17 +16,10 @@ jobs:
             - name: Setup NodeJS v23.7.0
               uses: actions/setup-node@v4
 
-            - name: Install dependencies
-              run: cd service && npm install
-
             - name: Install MySQL
               run: |
                   sudo apt-get update
                   sudo apt-get install -y mysql-server
-
-            - name: Change the root password
-              run: |
-                  sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1233456';"
 
             - name: Start MySQL
               run: |
@@ -34,7 +27,10 @@ jobs:
 
             - name: Create database
               run: |
-                  mysql -u root -p1233456 -e "CREATE DATABASE authentication"
+                  mysql -u root -e "CREATE DATABASE authentication"
+
+            - name: Install dependencies
+              run: cd service && npm install
 
             - name: Change the .github.env file to .env
               run: cd service && cp .github.env .env && cat .env
