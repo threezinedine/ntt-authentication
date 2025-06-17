@@ -39,9 +39,9 @@ jobs:
 
             - name: Setup SSH
               run: |
-                  mkdir -p ~/.ssh/
-                  echo "${{secrets.VPS_SSH_PRIVATE}}" > ~/.ssh/id_rsa
-                  chmod 600 ~/.ssh/id_rsa
+                  mkdir -p ~/.ssh/ && \
+                  echo "${{secrets.VPS_SSH_PRIVATE}}" > ~/.ssh/id_rsa && \  
+                  chmod 600 ~/.ssh/id_rsa && \
                   ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
 
             - name: Connect to the VPS
