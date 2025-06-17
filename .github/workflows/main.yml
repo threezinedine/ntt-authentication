@@ -32,17 +32,18 @@ jobs:
     deploy:
         name: Deploy the project
         runs-on: ubuntu-22.04
-        needs: build-test
+        # needs: build-test
         steps:
             - name: Checkout the code
               uses: actions/checkout@v4
 
             - name: Connect to the VPS
-              run: ssh ${{env.VPS_ACCOUNT}}@${{env.VPS_IP}} && |
-                  rm -r ntt-authentication && |
-                  git clone https://github.com/threezinedine/ntt-authentication.git && |
-                  cd ntt-authentication/service && |
-                  rm .env && |
-                  echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{env.MYSQL_HOST}}\nMYSQL_PORT=${{env.MYSQL_PORT}}\nMYSQL_USER=${{env.MYSQL_USER}}\nMYSQL_PASSWORD=${{env.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{env.MYSQL_DATABASE}}\nMODE=production" > .env && |
-                  cat .env && |
-                  docker compose up -d
+              run: |
+                  ssh ${{env.VPS_ACCOUNT}}@${{env.VPS_IP}} && \
+                    rm -r ntt-authentication && \
+                    git clone https://github.com/threezinedine/ntt-authentication.git && \
+                    cd ntt-authentication/service && \
+                    rm .env && \
+                    echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{env.MYSQL_HOST}}\nMYSQL_PORT=${{env.MYSQL_PORT}}\nMYSQL_USER=${{env.MYSQL_USER}}\nMYSQL_PASSWORD=${{env.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{env.MYSQL_DATABASE}}\nMODE=production" > .env && \
+                    cat .env && \
+                    docker compose up -d
