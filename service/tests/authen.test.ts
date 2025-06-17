@@ -9,6 +9,10 @@ describe('Authentication testing', () => {
 		await App.getInstance().setup();
 	});
 
+	afterAll(async () => {
+		await App.getInstance().teardown();
+	});
+
 	const app = App.getInstance();
 
 	it('should return error when the username is not provided', async () => {

@@ -87,6 +87,11 @@ class App {
 			process.exit(0);
 		});
 	}
+
+	async teardown() {
+		await this.serviceContainer.database.disconnect();
+		process.exit(0);
+	}
 }
 
 export default App;
