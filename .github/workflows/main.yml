@@ -24,7 +24,7 @@ jobs:
 
             - name: Run the local MySQL server
               run: |
-                  docker run --name ntt-authen-database -e MYSQL_ROOT_PASSWORD=1233456 -p 1234:3306 -d mysql:latest
+                  docker run --name ntt-authen-database -e MYSQL_ROOT_PASSWORD=1233456 -p 1234:3306 -d mysql:8.0
 
             - name: Run tests
               run: cd service && npm run test
