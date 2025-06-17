@@ -36,7 +36,6 @@ class App {
 			process.exit(1);
 		}
 
-		console.error(this.config.mysql);
 		console.log('Connected to database');
 
 		if (this.config.isDevelopment()) {

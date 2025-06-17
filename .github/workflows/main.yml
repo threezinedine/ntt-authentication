@@ -19,12 +19,12 @@ jobs:
             - name: Install dependencies
               run: cd service && npm install
 
+            - name: Change the .github.env file to .env
+              run: cd service && cp .github.env .env && echo .env
+
             - name: Run the local MySQL server
               run: |
                   docker run --name ntt-authen-database -e MYSQL_ROOT_PASSWORD=Thao@bn001 -p 1234:3306 -d mysql:latest
-
-            - name: Change the .github.env file to .env
-              run: cd service && cp .github.env .env
 
             - name: Run tests
               run: cd service && npm run test
