@@ -24,8 +24,7 @@ jobs:
               with:
                   image: mysql:latest
                   run: |
-                      docker run --name ntt-authen-database -e MYSQL_ROOT_PASSWORD=Thao@bn001 |
-                      -p 1234:3306 -d mysql:latest
+                      docker run --name ntt-authen-database -e MYSQL_ROOT_PASSWORD=Thao@bn001 -p 1234:3306 -d mysql:latest
 
             - name: Change the .github.env file to .env
               run: cd service && cp .github.env .env
