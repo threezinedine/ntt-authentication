@@ -20,6 +20,9 @@ class MySQLDatabase implements Database {
 			database: this.config.mysql.database,
 		};
 
+		console.log(
+			`Configuring database connection to ${access.host}:${access.port}`,
+		);
 		this.connection = await mysql.createConnection(access);
 		console.log('Connected to database');
 	}

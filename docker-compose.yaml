@@ -1,0 +1,10 @@
+services:
+    auth-service:
+        build:
+            context: ./service
+
+        ports:
+            - 8080:8080
+
+        volumes:
+            - ./service/.deploy.env:/app/.env

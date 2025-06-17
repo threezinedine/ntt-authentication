@@ -36,8 +36,6 @@ class App {
 			process.exit(1);
 		}
 
-		console.log('Connected to database');
-
 		if (this.config.isDevelopment()) {
 			console.log('Setting up database...');
 			try {

@@ -1,5 +1,1 @@
 *.env
-docker-compose.*
-
-!.github.env
-!docker-compose.example.yaml
