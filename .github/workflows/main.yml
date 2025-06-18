@@ -53,18 +53,16 @@ jobs:
                   script: |
                       cd ~ &&rm -r ntt-authentication
                       cd ~ && git clone https://github.com/threezinedine/ntt-authentication.git
-                      cd ~/ntt-authentication/service && rm .env
-                      cd ~/ntt-authentication/service && cat << EOT >> .env \
-                      HOST=0.0.0.0 \
-                      PORT=8080 \
-                      MYSQL_HOST=${{secrets.MYSQL_HOST}} \
-                      MYSQL_PORT=${{secrets.MYSQL_PORT}} \
-                      MYSQL_USER=${{secrets.MYSQL_USER}} \
-                      MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} \
-                      MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} \
-                      MODE=production
-                      EOT
-                      cd ~/ntt-authentication/service && cat .env
+                      cd ~/ntt-authentication/service && rm .deploy.env
+                      cd ~/ntt-authentication/service && echo HOST=0.0.0.0 > .deploy.env
+                      cd ~/ntt-authentication/service && echo PORT=8080 >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MYSQL_HOST=${{secrets.MYSQL_HOST}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MYSQL_PORT=${{secrets.MYSQL_PORT}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MYSQL_USER=${{secrets.MYSQL_USER}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo MODE=production >> .deploy.env
+                      cd ~/ntt-authentication/service && cat .deploy.env
                       cd ~/ntt-authentication/service && docker compose up -d
 
             # - name: Connect to the VPS
