@@ -31,7 +31,7 @@ class App {
 
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
-		this.app.use(Log);
+		// this.app.use(Log);
 	}
 
 	async setup() {
@@ -46,7 +46,6 @@ class App {
 			process.exit(1);
 		}
 
-		console.info('Setting up database...');
 		try {
 			await database.down();
 			await database.up();
@@ -54,8 +53,6 @@ class App {
 			console.error(`Failed to setup database: ${error}`);
 			process.exit(1);
 		}
-
-		console.info('Database setup completed');
 
 		this.serviceContainer.database = database;
 		this.serviceContainer.passwordService = new NoHashPasswordService();
