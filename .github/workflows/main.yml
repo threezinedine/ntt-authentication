@@ -65,7 +65,7 @@ jobs:
                       cd ~/ntt-authentication/service && cat .deploy.env
                       cd ~/ntt-authentication/service && docker compose down
                       docker image prune -f
-                      cd ~/ntt-authentication && docker compose up -d
+                      cd ~/ntt-authentication && docker compose up -d --build
 
             # - name: Connect to the VPS
             #   run: |
