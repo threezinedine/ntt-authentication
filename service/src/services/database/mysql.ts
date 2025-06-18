@@ -1,5 +1,6 @@
 import { Database } from './interface';
 import Config from '@/config';
+import { User } from '@/models/user';
 import mysql, { ConnectionOptions } from 'mysql2/promise';
 
 class MySQLDatabase implements Database {
@@ -41,10 +42,11 @@ class MySQLDatabase implements Database {
 			`
             CREATE TABLE IF NOT EXISTS users (
                 id VARCHAR(36) PRIMARY KEY NOT NULL,
-                username VARCHAR(100) NOT NULL,
+                username VARCHAR(100) NOT NULL UNIQUE,
                 password VARCHAR(255) NOT NULL,
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				role ENUM('admin', 'user', 'super_admin') NOT NULL
             );
             `,
 		);
@@ -56,6 +58,38 @@ class MySQLDatabase implements Database {
             DROP TABLE IF EXISTS users;
             `,
 		);
+	}
+
+	async createUser(user: User): Promise<void> {
+		await this.connection.execute(
+			`
+            INSERT INTO users (id, username, password, createdAt, updatedAt, role) VALUES (?, ?, ?, ?, ?, ?);
+        `,
+			[
+				user.id,
+				user.username,
+				user.password,
+				user.createdAt,
+				user.updatedAt,
+				user.role,
+			],
+		);
+	}
+
+	async getUserByUsername(username: string): Promise<User | null> {
+		const [result] = await this.connection.execute(
+			`SELECT * FROM users WHERE username = ?`,
+			[username],
+		);
+		return result[0] as User;
+	}
+
+	async getUserById(id: string): Promise<User | null> {
+		const [result] = await this.connection.execute(
+			`SELECT * FROM users WHERE id = ?`,
+			[id],
+		);
+		return result[0] as User;
 	}
 }
 

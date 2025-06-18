@@ -1,8 +1,13 @@
 import express from 'express';
-import { log } from '@/middlewares';
+import { Log, RequestAssertion } from '@/middlewares';
 import Config from './config';
-import ServiceContainer, { MySQLDatabase } from '@/services';
-import { DATABASE_SERVICE_NAME } from '@/data/constants';
+import ServiceContainer, {
+	MySQLDatabase,
+	NoHashPasswordService,
+} from '@/services';
+import { LoginHandler, RegisterHandler } from '@/routes';
+import { getLoginUrl, getRegisterUrl } from '@/utils';
+import { LoginRequest, RegisterRequest } from '@/schemas';
 
 class App {
 	public app: express.Application;
@@ -22,6 +27,10 @@ class App {
 		this.app = express();
 		this.config = Config.getInstance();
 		this.serviceContainer = ServiceContainer.getInstance();
+
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: true }));
+		this.app.use(Log);
 	}
 
 	async setup() {
@@ -48,12 +57,21 @@ class App {
 		console.log('Database setup completed');
 
 		this.serviceContainer.database = database;
+		this.serviceContainer.passwordService = new NoHashPasswordService();
 	}
 
 	setupRoutes() {
-		this.app.get('/', log, (req, res) => {
-			res.send('Hello World');
-		});
+		this.app.post(
+			getLoginUrl(),
+			[RequestAssertion<LoginRequest>()],
+			LoginHandler,
+		);
+
+		this.app.post(
+			getRegisterUrl(),
+			[RequestAssertion<RegisterRequest>()],
+			RegisterHandler,
+		);
 	}
 
 	listen() {
@@ -64,23 +82,6 @@ class App {
 			} else {
 				console.log(`Server is running on port ${this.config.port}`);
 			}
-		});
-
-		process.on('uncaughtException', async (err) => {
-			console.error(`Uncaught exception: ${err}`);
-			await this.serviceContainer.database.disconnect();
-			process.exit(1);
-		});
-
-		process.on('unhandledRejection', async (err) => {
-			console.error(`Unhandled rejection: ${err}`);
-			await this.serviceContainer.database.disconnect();
-			process.exit(1);
-		});
-
-		process.on('SIGINT', async () => {
-			await this.serviceContainer.database.disconnect();
-			process.exit(0);
 		});
 	}
 

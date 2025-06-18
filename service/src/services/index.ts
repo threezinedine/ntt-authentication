@@ -1,4 +1,5 @@
 import { Database, MySQLDatabase } from './database';
+import { NoHashPasswordService, PasswordService } from './password';
 
 export default class ServiceContainer {
 	private static instance: ServiceContainer;
@@ -18,7 +19,8 @@ export default class ServiceContainer {
 	}
 
 	public database: Database;
+	public passwordService: PasswordService;
 }
 
-export { MySQLDatabase };
-export type { Database };
+export { MySQLDatabase, NoHashPasswordService };
+export type { Database, PasswordService };

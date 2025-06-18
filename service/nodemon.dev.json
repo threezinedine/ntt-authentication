@@ -2,6 +2,6 @@
 	"verbose": true,
 	"watch": ["src/**/*"],
 	"ext": "ts",
-	"exec": "npm run dev",
+	"exec": "npm run start",
 	"ignore": ["dist", "node_modules", "*.test.ts"]
 }
