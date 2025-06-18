@@ -1,14 +1,14 @@
 import express from 'express';
-import { Log, RequestAssertion } from '@/middlewares';
+import { RequestAssertion } from '@/middlewares';
 import Config from './config';
 import ServiceContainer, {
 	JwtTokenizeService,
 	MySQLDatabase,
-	NoHashPasswordService,
 } from '@/services';
 import { LoginHandler, RegisterHandler, VerifyHandler } from '@/routes';
 import { getLoginUrl, getRegisterUrl, getVerifyUrl } from '@/utils';
 import { LoginRequest, RegisterRequest, VerifyRequest } from '@/schemas';
+import { HashPasswordService } from './services/password';
 
 class App {
 	public app: express.Application;
@@ -31,7 +31,6 @@ class App {
 
 		this.app.use(express.json());
 		this.app.use(express.urlencoded({ extended: true }));
-		// this.app.use(Log);
 	}
 
 	async setup() {
@@ -55,7 +54,7 @@ class App {
 		}
 
 		this.serviceContainer.database = database;
-		this.serviceContainer.passwordService = new NoHashPasswordService();
+		this.serviceContainer.passwordService = new HashPasswordService();
 		this.serviceContainer.tokenizeService = new JwtTokenizeService();
 	}
 
