@@ -43,6 +43,8 @@ jobs:
                   echo "${{secrets.VPS_SSH_PRIVATE}}" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
                   ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+                  cat ~/.ssh/id_rsa
+                  cat ~/.ssh/known_hosts
 
             - name: Connect to the VPS
               run: |
