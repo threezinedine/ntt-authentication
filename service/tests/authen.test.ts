@@ -4,6 +4,7 @@ import App from '@/app';
 import {
 	HTTP_BAD_REQUEST_STATUS,
 	HTTP_CREATED_STATUS,
+	HTTP_NOT_FOUND_STATUS,
 	HTTP_OK_STATUS,
 	HTTP_UNAUTHORIZED_STATUS,
 } from '@/data';
@@ -110,5 +111,14 @@ describe('Authentication testing', () => {
 		});
 
 		expect(loginResponse.status).toBe(HTTP_UNAUTHORIZED_STATUS);
+	});
+
+	it('should return error when the user is not found', async () => {
+		const response = await request.post(getLoginUrl()).send({
+			username: 'not_found',
+			password: '123456',
+		});
+
+		expect(response.status).toBe(HTTP_NOT_FOUND_STATUS);
 	});
 });
