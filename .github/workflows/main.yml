@@ -43,18 +43,31 @@ jobs:
                   echo "${{secrets.VPS_SSH_PRIVATE}}" > ~/.ssh/id_rsa
                   chmod 600 ~/.ssh/id_rsa
                   ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
-                  cat ~/.ssh/id_rsa
-                  cat ~/.ssh/known_hosts
 
-            - name: Connect to the VPS
-              run: |
-                  ssh -i ~/.ssh/id_rsa ${{secrets.VPS_ACCOUNT}}@${{secrets.VPS_IP}} << 'EOF'
-                  rm -r ntt-authentication
-                  git clone https://github.com/threezinedine/ntt-authentication.git
-                  cd ntt-authentication/service
-                  rm .env
-                  echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{secrets.MYSQL_HOST}}\nMYSQL_PORT=${{secrets.MYSQL_PORT}}\nMYSQL_USER=${{secrets.MYSQL_USER}}\nMYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{secrets.MYSQL_DATABASE}}\nMODE=production" > .env
-                  cat .env
-                  docker compose up -d
-                  EOF
-              shell: bash
+            - name: Deploy to the VPS
+              uses: appleboy/ssh-action@v1
+              with:
+                  host: ${{secrets.VPS_IP}}
+                  username: root
+                  key: ${{secrets.VPS_SSH_PRIVATE}}
+                  script: |
+                      rm -r ntt-authentication
+                      git clone https://github.com/threezinedine/ntt-authentication.git
+                      cd ntt-authentication/service
+                      rm .env
+                      echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{secrets.MYSQL_HOST}}\nMYSQL_PORT=${{secrets.MYSQL_PORT}}\nMYSQL_USER=${{secrets.MYSQL_USER}}\nMYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{secrets.MYSQL_DATABASE}}\nMODE=production" > .env
+                      cat .env
+                      docker compose up -d
+
+            # - name: Connect to the VPS
+            #   run: |
+            #       ssh -i ~/.ssh/id_rsa ${{secrets.VPS_ACCOUNT}}@${{secrets.VPS_IP}} << 'EOF'
+            #       rm -r ntt-authentication
+            #       git clone https://github.com/threezinedine/ntt-authentication.git
+            #       cd ntt-authentication/service
+            #       rm .env
+            #       echo "HOST=0.0.0.0\nPORT=8080\nMYSQL_HOST=${{secrets.MYSQL_HOST}}\nMYSQL_PORT=${{secrets.MYSQL_PORT}}\nMYSQL_USER=${{secrets.MYSQL_USER}}\nMYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}\nMYSQL_DATABASE=${{secrets.MYSQL_DATABASE}}\nMODE=production" > .env
+            #       cat .env
+            #       docker compose up -d
+            #       EOF
+            #   shell: bash
