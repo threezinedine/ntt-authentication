@@ -59,7 +59,7 @@ jobs:
                       cd ~/ntt-authentication/service && echo MYSQL_HOST=${{secrets.MYSQL_HOST}} >> .deploy.env
                       cd ~/ntt-authentication/service && echo MYSQL_PORT=${{secrets.MYSQL_PORT}} >> .deploy.env
                       cd ~/ntt-authentication/service && echo MYSQL_USER=${{secrets.MYSQL_USER}} >> .deploy.env
-                      cd ~/ntt-authentication/service && echo MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}} >> .deploy.env
+                      cd ~/ntt-authentication/service && echo "MYSQL_PASSWORD=${{secrets.MYSQL_PASSWORD}}" >> .deploy.env
                       cd ~/ntt-authentication/service && echo MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} >> .deploy.env
                       cd ~/ntt-authentication/service && echo MODE=production >> .deploy.env
                       cd ~/ntt-authentication/service && cat .deploy.env
