@@ -63,7 +63,9 @@ jobs:
                       cd ~/ntt-authentication/service && echo MYSQL_DATABASE=${{secrets.MYSQL_DATABASE}} >> .deploy.env
                       cd ~/ntt-authentication/service && echo MODE=production >> .deploy.env
                       cd ~/ntt-authentication/service && cat .deploy.env
-                      cd ~/ntt-authentication/service && docker compose up -d
+                      cd ~/ntt-authentication/service && docker compose down
+                      docker image prune -f
+                      cd ~/ntt-authentication && docker compose up -d
 
             # - name: Connect to the VPS
             #   run: |
