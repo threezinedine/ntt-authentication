@@ -8,7 +8,12 @@ import {
 	HTTP_OK_STATUS,
 	HTTP_UNAUTHORIZED_STATUS,
 } from '@/data';
-import { getLoginUrl, getRegisterUrl, randomString } from '@/utils';
+import {
+	getLoginUrl,
+	getRegisterUrl,
+	getVerifyUrl,
+	randomString,
+} from '@/utils';
 
 describe('Authentication testing', () => {
 	beforeAll(async () => {
@@ -78,6 +83,21 @@ describe('Authentication testing', () => {
 		});
 	}
 
+	async function login(
+		username: string,
+		password: string,
+	): Promise<{ accessToken: string; refreshToken: string }> {
+		const response = await request.post(getLoginUrl()).send({
+			username,
+			password,
+		});
+
+		return {
+			accessToken: response.body.accessToken,
+			refreshToken: response.body.refreshToken,
+		};
+	}
+
 	it('should create a new user when the request is valid in register api', async () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
@@ -120,5 +140,35 @@ describe('Authentication testing', () => {
 		});
 
 		expect(response.status).toBe(HTTP_NOT_FOUND_STATUS);
+	});
+
+	it('should login and the access token is verified', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+
+		await createTestUser(testUsername, testPassword);
+		const { accessToken } = await login(testUsername, testPassword);
+
+		const response = await request.post(getVerifyUrl()).send({
+			accessToken,
+		});
+
+		expect(response.status).toBe(HTTP_OK_STATUS);
+	});
+
+	it('should not able to verify the access token when the access token is invalid', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+
+		await createTestUser(testUsername, testPassword);
+		await login(testUsername, testPassword);
+
+		const invalidAccessToken = randomString(10);
+
+		const response = await request.post(getVerifyUrl()).send({
+			accessToken: invalidAccessToken,
+		});
+
+		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
 	});
 });

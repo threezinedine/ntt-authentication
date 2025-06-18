@@ -6,9 +6,9 @@ import ServiceContainer, {
 	MySQLDatabase,
 	NoHashPasswordService,
 } from '@/services';
-import { LoginHandler, RegisterHandler } from '@/routes';
-import { getLoginUrl, getRegisterUrl } from '@/utils';
-import { LoginRequest, RegisterRequest } from '@/schemas';
+import { LoginHandler, RegisterHandler, VerifyHandler } from '@/routes';
+import { getLoginUrl, getRegisterUrl, getVerifyUrl } from '@/utils';
+import { LoginRequest, RegisterRequest, VerifyRequest } from '@/schemas';
 
 class App {
 	public app: express.Application;
@@ -73,6 +73,12 @@ class App {
 			getRegisterUrl(),
 			[RequestAssertion<RegisterRequest>()],
 			RegisterHandler,
+		);
+
+		this.app.post(
+			getVerifyUrl(),
+			[RequestAssertion<VerifyRequest>()],
+			VerifyHandler,
 		);
 	}
 

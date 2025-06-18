@@ -14,3 +14,9 @@ export type LoginResponse = {
 
 export type RegisterRequest = LoginRequest;
 export type RegisterResponse = {};
+
+export type VerifyRequest = {
+	accessToken: string;
+};
+
+export type VerifyResponse = {};
