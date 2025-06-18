@@ -36,18 +36,16 @@ class App {
 			process.exit(1);
 		}
 
-		if (this.config.isDevelopment()) {
-			console.log('Setting up database...');
-			try {
-				await database.down();
-				await database.up();
-			} catch (error) {
-				console.error(`Failed to setup database: ${error}`);
-				process.exit(1);
-			}
-
-			console.log('Database setup completed');
+		console.log('Setting up database...');
+		try {
+			await database.down();
+			await database.up();
+		} catch (error) {
+			console.error(`Failed to setup database: ${error}`);
+			process.exit(1);
 		}
+
+		console.log('Database setup completed');
 
 		this.serviceContainer.database = database;
 	}
