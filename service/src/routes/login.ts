@@ -43,8 +43,22 @@ export default async function LoginHandler(
 		return;
 	}
 
+	const tokenizeService = serviceContainer.tokenizeService;
+
+	const accessToken = await tokenizeService.generateAccessToken({
+		id: user.id,
+		username: user.username,
+		role: user.role,
+	});
+
+	const refreshToken = await tokenizeService.generateRefreshToken({
+		id: user.id,
+		username: user.username,
+		role: user.role,
+	});
+
 	res.status(HTTP_OK_STATUS).json({
-		accessToken: '123',
-		refreshToken: '123',
+		accessToken,
+		refreshToken,
 	});
 }

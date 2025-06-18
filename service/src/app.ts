@@ -2,6 +2,7 @@ import express from 'express';
 import { Log, RequestAssertion } from '@/middlewares';
 import Config from './config';
 import ServiceContainer, {
+	JwtTokenizeService,
 	MySQLDatabase,
 	NoHashPasswordService,
 } from '@/services';
@@ -45,7 +46,7 @@ class App {
 			process.exit(1);
 		}
 
-		console.log('Setting up database...');
+		console.info('Setting up database...');
 		try {
 			await database.down();
 			await database.up();
@@ -54,10 +55,11 @@ class App {
 			process.exit(1);
 		}
 
-		console.log('Database setup completed');
+		console.info('Database setup completed');
 
 		this.serviceContainer.database = database;
 		this.serviceContainer.passwordService = new NoHashPasswordService();
+		this.serviceContainer.tokenizeService = new JwtTokenizeService();
 	}
 
 	setupRoutes() {
@@ -80,7 +82,7 @@ class App {
 				console.error(`Failed to start server: ${err}`);
 				process.exit(1);
 			} else {
-				console.log(`Server is running on port ${this.config.port}`);
+				console.info(`Server is running on port ${this.config.port}`);
 			}
 		});
 	}

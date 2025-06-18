@@ -8,8 +8,10 @@
 		"test:watch": "nodemon --config nodemon.test.json"
 	},
 	"dependencies": {
+		"@types/jsonwebtoken": "^9.0.10",
 		"dotenv": "^16.5.0",
 		"express": "^5.1.0",
+		"jsonwebtoken": "^9.0.2",
 		"mysql2": "^3.14.1",
 		"uuidv4": "^6.2.13"
 	},

@@ -21,17 +21,12 @@ class MySQLDatabase implements Database {
 			database: this.config.mysql.database,
 		};
 
-		console.log(
-			`Configuring database connection to ${access.host}:${access.port}`,
-		);
 		this.connection = await mysql.createConnection(access);
-		console.log('Connected to database');
 	}
 
 	async disconnect(): Promise<void> {
 		if (this.connection) {
 			await this.connection.end();
-			console.log('Disconnected from database');
 		} else {
 			console.error('No connection to disconnect from');
 		}

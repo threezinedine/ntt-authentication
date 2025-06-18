@@ -14,6 +14,13 @@ class Config {
 		database: string;
 	};
 
+	public jwt: {
+		accessTokenSecret: string;
+		refreshTokenSecret: string;
+		accessTokenExpiresIn: number; // in minutes
+		refreshTokenExpiresIn: number; // in minutes
+	};
+
 	private static instance: Config;
 
 	private constructor() {
@@ -47,6 +54,18 @@ class Config {
 		this.mode = (process.env.MODE || 'development') as
 			| 'development'
 			| 'production';
+
+		this.jwt = {
+			accessTokenSecret:
+				process.env.ACCESS_TOKEN_SECRET || 'access_token_secret',
+			refreshTokenSecret:
+				process.env.REFRESH_TOKEN_SECRET || 'refresh_token_secret',
+			accessTokenExpiresIn:
+				Number(process.env.ACCESS_TOKEN_EXPIRES_IN) || 15, // 15 minutes
+			refreshTokenExpiresIn:
+				Number(process.env.REFRESH_TOKEN_EXPIRES_IN) ||
+				60 * 60 * 24 * 30, // 30 days
+		};
 	}
 
 	isDevelopment(): boolean {
