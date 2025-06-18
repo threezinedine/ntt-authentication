@@ -19,4 +19,8 @@ export type VerifyRequest = {
 	accessToken: string;
 };
 
-export type VerifyResponse = {};
+export type VerifyResponse = {
+	id: string;
+	username: string;
+	role: string;
+};

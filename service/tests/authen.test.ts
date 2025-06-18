@@ -7,6 +7,7 @@ import {
 	HTTP_NOT_FOUND_STATUS,
 	HTTP_OK_STATUS,
 	HTTP_UNAUTHORIZED_STATUS,
+	Role,
 } from '@/data';
 import {
 	getLoginUrl,
@@ -14,6 +15,8 @@ import {
 	getVerifyUrl,
 	randomString,
 } from '@/utils';
+import { VerifyResponse } from '@/schemas';
+import ServiceContainer from '@/services';
 
 describe('Authentication testing', () => {
 	beforeAll(async () => {
@@ -154,6 +157,10 @@ describe('Authentication testing', () => {
 		});
 
 		expect(response.status).toBe(HTTP_OK_STATUS);
+		const user = response.body as VerifyResponse;
+		expect(user.id).toBeDefined();
+		expect(user.username).toBe(testUsername);
+		expect(user.role).toBe('user');
 	});
 
 	it('should not able to verify the access token when the access token is invalid', async () => {
@@ -161,7 +168,6 @@ describe('Authentication testing', () => {
 		const testPassword = randomString(10);
 
 		await createTestUser(testUsername, testPassword);
-		await login(testUsername, testPassword);
 
 		const invalidAccessToken = randomString(10);
 
@@ -170,5 +176,25 @@ describe('Authentication testing', () => {
 		});
 
 		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
+	});
+
+	it('should not able to verify the token when the user id is not found', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+
+		await createTestUser(testUsername, testPassword);
+
+		const tokenizeService = ServiceContainer.getInstance().tokenizeService;
+		const accessToken = await tokenizeService.generateAccessToken({
+			id: 'invalid_id',
+			username: testUsername,
+			role: Role.USER,
+		});
+
+		const response = await request.post(getVerifyUrl()).send({
+			accessToken,
+		});
+
+		expect(response.status).toBe(HTTP_NOT_FOUND_STATUS);
 	});
 });

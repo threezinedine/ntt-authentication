@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { VerifyRequest, VerifyResponse, ErrorResponse } from '@/schemas';
 import ServiceContainer from '@/services';
-import { HTTP_OK_STATUS, HTTP_UNAUTHORIZED_STATUS } from '@/data';
+import {
+	HTTP_NOT_FOUND_STATUS,
+	HTTP_OK_STATUS,
+	HTTP_UNAUTHORIZED_STATUS,
+} from '@/data';
 
 export default async function VerifyHandler(
 	req: Request<VerifyRequest>,
@@ -13,12 +17,25 @@ export default async function VerifyHandler(
 
 	const tokenData = await tokenizeService.verifyAccessToken(accessToken);
 
-	if (tokenData === null) {
+	if (!tokenData) {
 		res.status(HTTP_UNAUTHORIZED_STATUS).json({
 			message: 'Invalid access token',
 		});
 		return;
 	}
 
-	res.status(HTTP_OK_STATUS).json({});
+	const user = await serviceContainer.database.getUserById(tokenData.id);
+
+	if (!user) {
+		res.status(HTTP_NOT_FOUND_STATUS).json({
+			message: 'User not found',
+		});
+		return;
+	}
+
+	res.status(HTTP_OK_STATUS).json({
+		id: tokenData.id,
+		username: tokenData.username,
+		role: tokenData.role,
+	});
 }
