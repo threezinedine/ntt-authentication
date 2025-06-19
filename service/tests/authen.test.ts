@@ -286,4 +286,13 @@ describe('Authentication testing', () => {
 
 		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
 	});
+
+	it('should already has a super admin user at the start', async () => {
+		const response = await request.post(getLoginUrl()).send({
+			username: Config.getInstance().superAdmin.username,
+			password: Config.getInstance().superAdmin.password,
+		});
+
+		expect(response.status).toBe(HTTP_OK_STATUS);
+	});
 });

@@ -80,11 +80,14 @@ class App {
 
 	private async setupSuperAdmin() {
 		const database = this.serviceContainer.database;
+		const passwordService = this.serviceContainer.passwordService;
 
 		const superAdmin: User = {
 			id: uuidv4(),
 			username: this.config.superAdmin.username,
-			password: this.config.superAdmin.password,
+			password: await passwordService.hash(
+				this.config.superAdmin.password,
+			),
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			role: Role.SUPER_ADMIN,

@@ -2,6 +2,8 @@ import { Database } from './interface';
 import Config from '@/config';
 import { User } from '@/models';
 import mysql, { ConnectionOptions } from 'mysql2/promise';
+import { v4 as uuidv4 } from 'uuid';
+import { Role } from '@/data';
 
 class MySQLDatabase implements Database {
 	private config: Config;
