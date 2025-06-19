@@ -6,7 +6,7 @@ export interface TokenData {
 	role: Role;
 }
 
-export interface TokenizeService {
+export default interface TokenizeService {
 	generateAccessToken(data: TokenData): Promise<string>;
 	generateRefreshToken(data: TokenData): Promise<string>;
 	verifyAccessToken(accessToken: string): Promise<TokenData | null>;

@@ -17,6 +17,9 @@ export default async function VerifyHandler(
 
 	const tokenData = await tokenizeService.verifyAccessToken(accessToken);
 
+	console.log('Access token', accessToken);
+	console.log('Token data', tokenData);
+
 	if (!tokenData) {
 		res.status(HTTP_UNAUTHORIZED_STATUS).json({
 			message: 'Invalid access token',

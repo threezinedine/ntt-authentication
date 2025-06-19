@@ -1,5 +1,6 @@
 import Config from '@/config';
-import { TokenData, TokenizeService } from './interface';
+import { TokenData } from './interface';
+import TokenizeService from './interface';
 import jwt from 'jsonwebtoken';
 
 export default class JwtTokenizeService implements TokenizeService {
@@ -14,7 +15,7 @@ export default class JwtTokenizeService implements TokenizeService {
 			id: data.id,
 			username: data.username,
 			role: data.role,
-			exp: Math.floor(Date.now() / 1000) + expiresIn,
+			exp: Math.floor(Date.now() / 1000) + expiresIn * 60,
 		};
 
 		return jwt.sign(payload, secret);

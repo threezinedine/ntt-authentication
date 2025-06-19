@@ -1,7 +1,6 @@
 import { Database, MySQLDatabase } from './database';
 import { NoHashPasswordService, PasswordService } from './password';
-import { TokenizeService } from './tokenize/interface';
-import JwtTokenizeService from './tokenize/jwt';
+import { JwtTokenizeService, TokenizeService } from './tokenize';
 
 export default class ServiceContainer {
 	private static instance: ServiceContainer;
