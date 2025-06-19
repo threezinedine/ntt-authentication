@@ -1,11 +1,12 @@
 export const DATABASE_SERVICE_NAME = 'database';
 
-export const AUTHORIZATION_HEADER = 'Authorization';
+export const AUTHORIZATION_HEADER = 'authorization';
 
 export const HTTP_OK_STATUS = 200;
 export const HTTP_CREATED_STATUS = 201;
 export const HTTP_BAD_REQUEST_STATUS = 400;
 export const HTTP_UNAUTHORIZED_STATUS = 401;
+export const HTTP_FORBIDDEN_STATUS = 403;
 export const HTTP_NOT_FOUND_STATUS = 404;
 export const HTTP_CONFLICT_STATUS = 409;
 export const HTTP_INTERNAL_SERVER_ERROR_STATUS = 500;

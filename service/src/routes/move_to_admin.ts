@@ -12,9 +12,10 @@ import {
 	HTTP_OK_STATUS,
 	Role,
 } from '@/data';
+import { AuthenRequest } from '@/middlewares/authen';
 
 export default async function moveToAdmin(
-	request: Request<{}, MoveToAdminResponse, MoveToAdminRequest>,
+	request: AuthenRequest<MoveToAdminRequest>,
 	response: Response<MoveToAdminResponse | ErrorResponse>,
 ): Promise<void> {
 	const { userId } = request.body;
@@ -23,7 +24,6 @@ export default async function moveToAdmin(
 	const user = await databaseService.getUserById(userId);
 
 	if (!user) {
-		console.error(`User with id ${userId} not found`);
 		response.status(HTTP_NOT_FOUND_STATUS).json({
 			message: `User with id ${userId} not found`,
 		});
@@ -31,7 +31,6 @@ export default async function moveToAdmin(
 	}
 
 	if (user.role === Role.ADMIN) {
-		console.error(`User with id ${userId} is already an admin`);
 		response.status(HTTP_CONFLICT_STATUS).json({
 			message: `User with id ${userId} is already an admin`,
 		});
@@ -41,7 +40,6 @@ export default async function moveToAdmin(
 	try {
 		await databaseService.updateUserRole(userId, Role.ADMIN);
 	} catch (error) {
-		console.error(`Failed to update user role: ${error}`);
 		response.status(HTTP_INTERNAL_SERVER_ERROR_STATUS).json({
 			message: `Failed to update user role: ${error}`,
 		});

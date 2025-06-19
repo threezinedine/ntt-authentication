@@ -30,6 +30,7 @@ import { HashPasswordService } from './services/password';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '@/models';
 import { Role } from './data';
+import AuthenMiddleware from './middlewares/authen';
 
 class App {
 	public app: express.Application;
@@ -106,31 +107,32 @@ class App {
 	setupRoutes() {
 		this.app.post(
 			getLoginUrl(),
-			[RequestAssertion<LoginRequest>()],
+			RequestAssertion<LoginRequest>(),
 			LoginHandler,
 		);
 
 		this.app.post(
 			getRegisterUrl(),
-			[RequestAssertion<RegisterRequest>()],
+			RequestAssertion<RegisterRequest>(),
 			RegisterHandler,
 		);
 
 		this.app.post(
 			getVerifyUrl(),
-			[RequestAssertion<VerifyRequest>()],
+			RequestAssertion<VerifyRequest>(),
 			VerifyHandler,
 		);
 
 		this.app.post(
 			getRefreshUrl(),
-			[RequestAssertion<RefreshRequest>()],
+			RequestAssertion<RefreshRequest>(),
 			RefreshHandler,
 		);
 
 		this.app.put(
 			getMoveToAdminUrl(),
-			[RequestAssertion<MoveToAdminRequest>()],
+			AuthenMiddleware(true, [Role.SUPER_ADMIN]),
+			RequestAssertion<MoveToAdminRequest>(),
 			MoveToAdminHandler,
 		);
 	}
