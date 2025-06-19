@@ -21,6 +21,11 @@ class Config {
 		refreshTokenExpiresIn: number; // in minutes
 	};
 
+	public superAdmin: {
+		username: string;
+		password: string;
+	};
+
 	private static instance: Config;
 
 	private constructor() {
@@ -65,6 +70,11 @@ class Config {
 			refreshTokenExpiresIn:
 				Number(process.env.REFRESH_TOKEN_EXPIRES_IN) ||
 				60 * 60 * 24 * 30, // 30 days
+		};
+
+		this.superAdmin = {
+			username: process.env.SUPER_ADMIN_USERNAME || 'super_admin',
+			password: process.env.SUPER_ADMIN_PASSWORD || 'super_admin',
 		};
 	}
 

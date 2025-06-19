@@ -83,8 +83,8 @@ class App {
 
 		const superAdmin: User = {
 			id: uuidv4(),
-			username: 'super_admin',
-			password: 'super_admin',
+			username: this.config.superAdmin.username,
+			password: this.config.superAdmin.password,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			role: Role.SUPER_ADMIN,
