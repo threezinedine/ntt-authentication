@@ -42,7 +42,7 @@ export default function AuthenMiddleware(
 
 		if (!accessToken) {
 			res.status(HTTP_UNAUTHORIZED_STATUS).json({
-				message: 'Unauthorized',
+				message: 'The access token is required',
 			});
 			return;
 		}
@@ -51,7 +51,7 @@ export default function AuthenMiddleware(
 
 		if (!tokenData) {
 			res.status(HTTP_UNAUTHORIZED_STATUS).json({
-				message: 'Unauthorized',
+				message: 'The access token is invalid',
 			});
 			return;
 		}
