@@ -13,3 +13,4 @@ export const AUTH_URL = `auth`;
 export const LOGIN_URL = `login`;
 export const REGISTER_URL = `register`;
 export const VERIFY_URL = `verify`;
+export const REFRESH_URL = `refresh`;

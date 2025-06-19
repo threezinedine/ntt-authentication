@@ -5,9 +5,24 @@ import ServiceContainer, {
 	JwtTokenizeService,
 	MySQLDatabase,
 } from '@/services';
-import { LoginHandler, RegisterHandler, VerifyHandler } from '@/routes';
-import { getLoginUrl, getRegisterUrl, getVerifyUrl } from '@/utils';
-import { LoginRequest, RegisterRequest, VerifyRequest } from '@/schemas';
+import {
+	LoginHandler,
+	RefreshHandler,
+	RegisterHandler,
+	VerifyHandler,
+} from '@/routes';
+import {
+	getLoginUrl,
+	getRefreshUrl,
+	getRegisterUrl,
+	getVerifyUrl,
+} from '@/utils';
+import {
+	LoginRequest,
+	RefreshRequest,
+	RegisterRequest,
+	VerifyRequest,
+} from '@/schemas';
 import { HashPasswordService } from './services/password';
 
 class App {
@@ -75,6 +90,12 @@ class App {
 			getVerifyUrl(),
 			[RequestAssertion<VerifyRequest>()],
 			VerifyHandler,
+		);
+
+		this.app.post(
+			getRefreshUrl(),
+			[RequestAssertion<RefreshRequest>()],
+			RefreshHandler,
 		);
 	}
 

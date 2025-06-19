@@ -11,12 +11,15 @@ import {
 } from '@/data';
 import {
 	getLoginUrl,
+	getRefreshUrl,
 	getRegisterUrl,
 	getVerifyUrl,
 	randomString,
 } from '@/utils';
 import { VerifyResponse } from '@/schemas';
 import ServiceContainer from '@/services';
+import { JwtTokenizeService, TokenData } from '@/services/tokenize';
+import Config from '@/config';
 
 describe('Authentication testing', () => {
 	beforeAll(async () => {
@@ -99,6 +102,28 @@ describe('Authentication testing', () => {
 			accessToken: response.body.accessToken,
 			refreshToken: response.body.refreshToken,
 		};
+	}
+
+	async function verify(accessToken: string): Promise<TokenData> {
+		const response = await request.post(getVerifyUrl()).send({
+			accessToken,
+		});
+
+		expect(response.status).toBe(HTTP_OK_STATUS);
+		expect(response.body.id).toBeDefined();
+		expect(response.body.username).toBeDefined();
+		expect(response.body.role).toBeDefined();
+
+		return response.body;
+	}
+
+	async function verifyError(accessToken: string): Promise<void> {
+		const response = await request.post(getVerifyUrl()).send({
+			accessToken,
+		});
+
+		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
+		expect(response.body.message).toBeDefined();
 	}
 
 	it('should create a new user when the request is valid in register api', async () => {
@@ -196,5 +221,69 @@ describe('Authentication testing', () => {
 		});
 
 		expect(response.status).toBe(HTTP_NOT_FOUND_STATUS);
+	});
+
+	it('should not able to verify the access token when the access token is expired', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+		const tokenizeService = new JwtTokenizeService();
+
+		const accessToken = tokenizeService.generateToken(
+			{
+				id: 'expired_id',
+				username: testUsername,
+				role: Role.USER,
+			},
+			-1,
+			Config.getInstance().jwt.accessTokenSecret,
+		);
+
+		await createTestUser(testUsername, testPassword);
+		await verifyError(accessToken);
+	});
+
+	it('should able to refresh the access token', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+
+		await createTestUser(testUsername, testPassword);
+		const { accessToken, refreshToken } = await login(
+			testUsername,
+			testPassword,
+		);
+
+		const response = await request.post(getRefreshUrl()).send({
+			accessToken,
+			refreshToken,
+		});
+
+		expect(response.status).toBe(HTTP_OK_STATUS);
+		expect(response.body.accessToken).toBeDefined();
+		await verify(response.body.accessToken);
+	});
+
+	it('should not able to refresh the access token if the refresh token is invalid', async () => {
+		const testUsername = randomString(10);
+		const testPassword = randomString(10);
+
+		await createTestUser(testUsername, testPassword);
+		const { accessToken } = await login(testUsername, testPassword);
+
+		const refreshToken = new JwtTokenizeService().generateToken(
+			{
+				id: 'invalid_id',
+				username: testUsername,
+				role: Role.USER,
+			},
+			-1,
+			Config.getInstance().jwt.refreshTokenSecret,
+		);
+
+		const response = await request.post(getRefreshUrl()).send({
+			accessToken,
+			refreshToken,
+		});
+
+		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
 	});
 });

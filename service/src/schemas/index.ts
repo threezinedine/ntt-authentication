@@ -24,3 +24,12 @@ export type VerifyResponse = {
 	username: string;
 	role: string;
 };
+
+export type RefreshRequest = {
+	accessToken: string;
+	refreshToken: string;
+};
+
+export type RefreshResponse = {
+	accessToken: string;
+};

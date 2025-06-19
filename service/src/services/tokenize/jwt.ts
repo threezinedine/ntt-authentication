@@ -10,7 +10,7 @@ export default class JwtTokenizeService implements TokenizeService {
 		this.config = Config.getInstance();
 	}
 
-	private generateToken(data: TokenData, expiresIn: number, secret: string) {
+	generateToken(data: TokenData, expiresIn: number, secret: string) {
 		const payload = {
 			id: data.id,
 			username: data.username,

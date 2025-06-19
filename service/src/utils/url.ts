@@ -2,6 +2,7 @@ import {
 	AUTH_URL,
 	BASE_URL,
 	LOGIN_URL,
+	REFRESH_URL,
 	REGISTER_URL,
 	VERIFY_URL,
 } from '@/data/constants';
@@ -16,4 +17,8 @@ export function getRegisterUrl() {
 
 export function getVerifyUrl() {
 	return `/${BASE_URL}/${AUTH_URL}/${VERIFY_URL}`;
+}
+
+export function getRefreshUrl() {
+	return `/${BASE_URL}/${AUTH_URL}/${REFRESH_URL}`;
 }
