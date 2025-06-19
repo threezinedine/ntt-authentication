@@ -24,6 +24,9 @@ import {
 	VerifyRequest,
 } from '@/schemas';
 import { HashPasswordService } from './services/password';
+import { v4 as uuidv4 } from 'uuid';
+import { User } from '@/models';
+import { Role } from './data';
 
 class App {
 	public app: express.Application;
@@ -71,6 +74,27 @@ class App {
 		this.serviceContainer.database = database;
 		this.serviceContainer.passwordService = new HashPasswordService();
 		this.serviceContainer.tokenizeService = new JwtTokenizeService();
+
+		await this.setupSuperAdmin();
+	}
+
+	private async setupSuperAdmin() {
+		const database = this.serviceContainer.database;
+
+		const superAdmin: User = {
+			id: uuidv4(),
+			username: 'super_admin',
+			password: 'super_admin',
+			createdAt: new Date(),
+			updatedAt: new Date(),
+			role: Role.SUPER_ADMIN,
+		};
+
+		try {
+			await database.createUser(superAdmin);
+		} catch (error) {
+			console.error(`Failed to setup super admin: ${error}`);
+		}
 	}
 
 	setupRoutes() {

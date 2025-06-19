@@ -6,7 +6,7 @@ import {
 	HTTP_INTERNAL_SERVER_ERROR_STATUS,
 	Role,
 } from '@/data';
-import { User } from '@/models/user';
+import { User } from '@/models';
 import { v4 as uuidv4 } from 'uuid';
 import ServiceContainer from '@/services';
 

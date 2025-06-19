@@ -1,6 +1,6 @@
 import { Database } from './interface';
 import Config from '@/config';
-import { User } from '@/models/user';
+import { User } from '@/models';
 import mysql, { ConnectionOptions } from 'mysql2/promise';
 
 class MySQLDatabase implements Database {
