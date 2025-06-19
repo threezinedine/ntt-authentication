@@ -1,3 +1,4 @@
+import { Role } from '@/data';
 import { User } from '@/models';
 
 export interface Database {
@@ -10,4 +11,6 @@ export interface Database {
 	createUser(user: User): Promise<void>;
 	getUserByUsername(username: string): Promise<User | null>;
 	getUserById(id: string): Promise<User | null>;
+
+	updateUserRole(userId: string, role: Role): Promise<void>;
 }

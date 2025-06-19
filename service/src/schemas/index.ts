@@ -33,3 +33,9 @@ export type RefreshRequest = {
 export type RefreshResponse = {
 	accessToken: string;
 };
+
+export type MoveToAdminRequest = {
+	userId: string;
+};
+
+export type MoveToAdminResponse = {};

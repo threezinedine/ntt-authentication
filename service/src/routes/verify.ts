@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { VerifyRequest, VerifyResponse, ErrorResponse } from '@/schemas';
 import ServiceContainer from '@/services';
 import {
+	HTTP_CONFLICT_STATUS,
 	HTTP_NOT_FOUND_STATUS,
 	HTTP_OK_STATUS,
 	HTTP_UNAUTHORIZED_STATUS,
@@ -33,9 +34,16 @@ export default async function VerifyHandler(
 		return;
 	}
 
+	if (user.role !== tokenData.role) {
+		res.status(HTTP_CONFLICT_STATUS).json({
+			message: 'User role has been modified',
+		});
+		return;
+	}
+
 	res.status(HTTP_OK_STATUS).json({
-		id: tokenData.id,
-		username: tokenData.username,
-		role: tokenData.role,
+		id: user.id,
+		username: user.username,
+		role: user.role,
 	});
 }

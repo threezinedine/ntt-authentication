@@ -20,22 +20,21 @@ import { VerifyResponse } from '@/schemas';
 import ServiceContainer from '@/services';
 import { JwtTokenizeService, TokenData } from '@/services/tokenize';
 import Config from '@/config';
+import TestHelpers from './helpers';
 
 describe('Authentication testing', () => {
+	const testHelpers = TestHelpers.getInstance();
+
 	beforeAll(async () => {
-		await App.getInstance().setup();
-		App.getInstance().setupRoutes();
+		await testHelpers.setup();
 	});
 
 	afterAll(async () => {
-		await App.getInstance().teardown();
+		await testHelpers.teardown();
 	});
 
-	const app = App.getInstance();
-	const request = supertest(app.app);
-
 	it('should return error when the username is not provided', async () => {
-		const response = await request.post(getLoginUrl()).send({
+		const response = await testHelpers.request.post(getLoginUrl()).send({
 			password: '123456',
 		});
 
@@ -43,7 +42,7 @@ describe('Authentication testing', () => {
 	});
 
 	it('should return error when the password is not provided', async () => {
-		const response = await request.post(getLoginUrl()).send({
+		const response = await testHelpers.request.post(getLoginUrl()).send({
 			username: 'test',
 		});
 
@@ -54,9 +53,9 @@ describe('Authentication testing', () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
 
-		const response = await request.post(getLoginUrl()).send({
+		const response = await testHelpers.request.post(getLoginUrl()).send({
 			username: testUsername,
 			password: testPassword,
 		});
@@ -67,7 +66,7 @@ describe('Authentication testing', () => {
 	});
 
 	it('should return error when the username is already taken in register api', async () => {
-		const response = await request.post(getRegisterUrl()).send({
+		const response = await testHelpers.request.post(getRegisterUrl()).send({
 			password: '123456',
 		});
 
@@ -75,72 +74,30 @@ describe('Authentication testing', () => {
 	});
 
 	it('should return error when the password is not provided in register api', async () => {
-		const response = await request.post(getRegisterUrl()).send({
+		const response = await testHelpers.request.post(getRegisterUrl()).send({
 			username: 'test',
 		});
 
 		expect(response.status).toBe(HTTP_BAD_REQUEST_STATUS);
 	});
 
-	async function createTestUser(username: string, password: string) {
-		await request.post(getRegisterUrl()).send({
-			username,
-			password,
-		});
-	}
-
-	async function login(
-		username: string,
-		password: string,
-	): Promise<{ accessToken: string; refreshToken: string }> {
-		const response = await request.post(getLoginUrl()).send({
-			username,
-			password,
-		});
-
-		return {
-			accessToken: response.body.accessToken,
-			refreshToken: response.body.refreshToken,
-		};
-	}
-
-	async function verify(accessToken: string): Promise<TokenData> {
-		const response = await request.post(getVerifyUrl()).send({
-			accessToken,
-		});
-
-		expect(response.status).toBe(HTTP_OK_STATUS);
-		expect(response.body.id).toBeDefined();
-		expect(response.body.username).toBeDefined();
-		expect(response.body.role).toBeDefined();
-
-		return response.body;
-	}
-
-	async function verifyError(accessToken: string): Promise<void> {
-		const response = await request.post(getVerifyUrl()).send({
-			accessToken,
-		});
-
-		expect(response.status).toBe(HTTP_UNAUTHORIZED_STATUS);
-		expect(response.body.message).toBeDefined();
-	}
-
 	it('should create a new user when the request is valid in register api', async () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		const response = await request.post(getRegisterUrl()).send({
+		const response = await testHelpers.request.post(getRegisterUrl()).send({
 			username: testUsername,
 			password: testPassword,
 		});
 
 		expect(response.status).toBe(HTTP_CREATED_STATUS);
 
-		const loginResponse = await request.post(getLoginUrl()).send({
-			username: testUsername,
-			password: testPassword,
-		});
+		const loginResponse = await testHelpers.request
+			.post(getLoginUrl())
+			.send({
+				username: testUsername,
+				password: testPassword,
+			});
 
 		expect(loginResponse.status).toBe(HTTP_OK_STATUS);
 		expect(loginResponse.body.accessToken).toBeDefined();
@@ -151,18 +108,20 @@ describe('Authentication testing', () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
 
-		const loginResponse = await request.post(getLoginUrl()).send({
-			username: testUsername,
-			password: 'wrong_password',
-		});
+		const loginResponse = await testHelpers.request
+			.post(getLoginUrl())
+			.send({
+				username: testUsername,
+				password: 'wrong_password',
+			});
 
 		expect(loginResponse.status).toBe(HTTP_UNAUTHORIZED_STATUS);
 	});
 
 	it('should return error when the user is not found', async () => {
-		const response = await request.post(getLoginUrl()).send({
+		const response = await testHelpers.request.post(getLoginUrl()).send({
 			username: 'not_found',
 			password: '123456',
 		});
@@ -174,10 +133,13 @@ describe('Authentication testing', () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
-		const { accessToken } = await login(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
+		const { accessToken } = await testHelpers.login(
+			testUsername,
+			testPassword,
+		);
 
-		const response = await request.post(getVerifyUrl()).send({
+		const response = await testHelpers.request.post(getVerifyUrl()).send({
 			accessToken,
 		});
 
@@ -192,11 +154,11 @@ describe('Authentication testing', () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
 
 		const invalidAccessToken = randomString(10);
 
-		const response = await request.post(getVerifyUrl()).send({
+		const response = await testHelpers.request.post(getVerifyUrl()).send({
 			accessToken: invalidAccessToken,
 		});
 
@@ -207,7 +169,7 @@ describe('Authentication testing', () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
 
 		const tokenizeService = ServiceContainer.getInstance().tokenizeService;
 		const accessToken = await tokenizeService.generateAccessToken({
@@ -216,7 +178,7 @@ describe('Authentication testing', () => {
 			role: Role.USER,
 		});
 
-		const response = await request.post(getVerifyUrl()).send({
+		const response = await testHelpers.request.post(getVerifyUrl()).send({
 			accessToken,
 		});
 
@@ -238,36 +200,39 @@ describe('Authentication testing', () => {
 			Config.getInstance().jwt.accessTokenSecret,
 		);
 
-		await createTestUser(testUsername, testPassword);
-		await verifyError(accessToken);
+		await testHelpers.createTestUser(testUsername, testPassword);
+		await testHelpers.verifyError(accessToken);
 	});
 
 	it('should able to refresh the access token', async () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
-		const { accessToken, refreshToken } = await login(
+		await testHelpers.createTestUser(testUsername, testPassword);
+		const { accessToken, refreshToken } = await testHelpers.login(
 			testUsername,
 			testPassword,
 		);
 
-		const response = await request.post(getRefreshUrl()).send({
+		const response = await testHelpers.request.post(getRefreshUrl()).send({
 			accessToken,
 			refreshToken,
 		});
 
 		expect(response.status).toBe(HTTP_OK_STATUS);
 		expect(response.body.accessToken).toBeDefined();
-		await verify(response.body.accessToken);
+		await testHelpers.verify(response.body.accessToken);
 	});
 
 	it('should not able to refresh the access token if the refresh token is invalid', async () => {
 		const testUsername = randomString(10);
 		const testPassword = randomString(10);
 
-		await createTestUser(testUsername, testPassword);
-		const { accessToken } = await login(testUsername, testPassword);
+		await testHelpers.createTestUser(testUsername, testPassword);
+		const { accessToken } = await testHelpers.login(
+			testUsername,
+			testPassword,
+		);
 
 		const refreshToken = new JwtTokenizeService().generateToken(
 			{
@@ -279,7 +244,7 @@ describe('Authentication testing', () => {
 			Config.getInstance().jwt.refreshTokenSecret,
 		);
 
-		const response = await request.post(getRefreshUrl()).send({
+		const response = await testHelpers.request.post(getRefreshUrl()).send({
 			accessToken,
 			refreshToken,
 		});
@@ -288,7 +253,7 @@ describe('Authentication testing', () => {
 	});
 
 	it('should already has a super admin user at the start', async () => {
-		const response = await request.post(getLoginUrl()).send({
+		const response = await testHelpers.request.post(getLoginUrl()).send({
 			username: Config.getInstance().superAdmin.username,
 			password: Config.getInstance().superAdmin.password,
 		});

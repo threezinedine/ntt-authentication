@@ -2,6 +2,8 @@ import {
 	AUTH_URL,
 	BASE_URL,
 	LOGIN_URL,
+	MOVE_TO_ADMIN_URL,
+	SERVICE_URL,
 	REFRESH_URL,
 	REGISTER_URL,
 	VERIFY_URL,
@@ -21,4 +23,8 @@ export function getVerifyUrl() {
 
 export function getRefreshUrl() {
 	return `/${BASE_URL}/${AUTH_URL}/${REFRESH_URL}`;
+}
+
+export function getMoveToAdminUrl() {
+	return `/${BASE_URL}/${SERVICE_URL}/${MOVE_TO_ADMIN_URL}`;
 }

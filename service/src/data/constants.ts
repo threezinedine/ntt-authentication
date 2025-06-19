@@ -1,5 +1,7 @@
 export const DATABASE_SERVICE_NAME = 'database';
 
+export const AUTHORIZATION_HEADER = 'Authorization';
+
 export const HTTP_OK_STATUS = 200;
 export const HTTP_CREATED_STATUS = 201;
 export const HTTP_BAD_REQUEST_STATUS = 400;
@@ -14,3 +16,6 @@ export const LOGIN_URL = `login`;
 export const REGISTER_URL = `register`;
 export const VERIFY_URL = `verify`;
 export const REFRESH_URL = `refresh`;
+
+export const SERVICE_URL = 'service';
+export const MOVE_TO_ADMIN_URL = 'move-to-admin';

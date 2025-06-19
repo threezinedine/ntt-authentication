@@ -7,18 +7,21 @@ import ServiceContainer, {
 } from '@/services';
 import {
 	LoginHandler,
+	MoveToAdminHandler,
 	RefreshHandler,
 	RegisterHandler,
 	VerifyHandler,
 } from '@/routes';
 import {
 	getLoginUrl,
+	getMoveToAdminUrl,
 	getRefreshUrl,
 	getRegisterUrl,
 	getVerifyUrl,
 } from '@/utils';
 import {
 	LoginRequest,
+	MoveToAdminRequest,
 	RefreshRequest,
 	RegisterRequest,
 	VerifyRequest,
@@ -123,6 +126,12 @@ class App {
 			getRefreshUrl(),
 			[RequestAssertion<RefreshRequest>()],
 			RefreshHandler,
+		);
+
+		this.app.put(
+			getMoveToAdminUrl(),
+			[RequestAssertion<MoveToAdminRequest>()],
+			MoveToAdminHandler,
 		);
 	}
 

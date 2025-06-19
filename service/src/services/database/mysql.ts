@@ -88,6 +88,13 @@ class MySQLDatabase implements Database {
 		);
 		return result[0] as User;
 	}
+
+	async updateUserRole(userId: string, role: Role): Promise<void> {
+		await this.connection.execute(
+			`UPDATE users SET role = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?`,
+			[role, userId],
+		);
+	}
 }
 
 export default MySQLDatabase;
